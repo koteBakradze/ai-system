@@ -1,0 +1,67 @@
+{
+  "enabled": true,
+  "strict_free_only": true,
+  "require_discovered_free_models": false,
+  "check_remote_key_usage": true,
+  "block_on_remote_usage_error": false,
+  "minimum_remote_credits_remaining": 0,
+  "remote_key_cache_seconds": 300,
+  "request_timeout_seconds": 45,
+  "discovery_timeout_seconds": 30,
+  "remote_key_timeout_seconds": 15,
+  "max_completion_tokens": 900,
+  "temperature": 0.2,
+
+  "limits": {
+    "free_tier_daily_request_limit": 50,
+    "paid_account_free_model_daily_request_limit": 1000,
+    "minute_request_limit": 20,
+    "reserve_requests": 5,
+    "max_parallel_review_models": 3
+  },
+
+  "default": "openrouter/free",
+  "default_model": "openrouter/free",
+  "fallback_models": [
+    "openrouter/free"
+  ],
+
+  "seed_models": {
+    "general": "openrouter/free",
+    "reasoning": "arcee-ai/trinity-large-thinking:free",
+    "reasoning_alt": "deepseek/deepseek-r1:free",
+    "balanced_review": "deepseek/deepseek-r1-distill-qwen-32b:free",
+    "code_review": "deepseek/deepseek-r1-distill-llama-70b:free"
+  },
+
+  "multi_review_profiles": {
+    "technical_architect": {
+      "model": "arcee-ai/trinity-large-thinking:free",
+      "reasoning_enabled": true,
+      "system_prompt": "You are a senior software architect. Review the idea for architecture quality, maintainability, risks, and missing technical decisions. Be practical and concise."
+    },
+    "skeptical_engineer": {
+      "model": "deepseek/deepseek-r1:free",
+      "reasoning_enabled": true,
+      "system_prompt": "You are a skeptical senior engineer. Find weak assumptions, hidden complexity, fake optimism, and implementation risks. Be direct and useful."
+    },
+    "code_reviewer": {
+      "model": "deepseek/deepseek-r1-distill-llama-70b:free",
+      "reasoning_enabled": false,
+      "system_prompt": "You are a strict code reviewer. Focus on bugs, edge cases, security, maintainability, and testability. Return actionable feedback."
+    },
+    "product_income_reviewer": {
+      "model": "deepseek/deepseek-r1-distill-qwen-32b:free",
+      "reasoning_enabled": false,
+      "system_prompt": "You are a pragmatic product and monetization reviewer. Judge whether this can realistically make money, what is fake, what is risky, and what the smallest useful version should be."
+    },
+    "free_router_general": {
+      "model": "openrouter/free",
+      "reasoning_enabled": false,
+      "system_prompt": "You are a general second-opinion reviewer. Give a concise, practical answer and mention uncertainty."
+    }
+  },
+
+  "discovered_at": null,
+  "discovered_free_models": []
+}

@@ -1,0 +1,79 @@
+# Project Context Snapshot
+
+- Captured: 2026-05-11T22:48:51.266184+00:00
+- Project root: `/Users/k0/Documents/AI_tools/ai-system`
+- Max depth: 4
+- Files listed: 70
+
+## Safe Project Files
+
+- `.env.example`
+- `.gitignore`
+- `README.md`
+- `__init__.py`
+- `agents/__init__.py`
+- `agents/coding/__init__.py`
+- `agents/coding/coding_agent.py`
+- `agents/environment/__init__.py`
+- `agents/environment/environment_agent.py`
+- `agents/memory/__init__.py`
+- `agents/memory/memory_agent.py`
+- `agents/planning/__init__.py`
+- `agents/planning/planner_agent.py`
+- `agents/research/__init__.py`
+- `agents/research/research_agent.py`
+- `api/__init__.py`
+- `api/routes/__init__.py`
+- `api/routes/health.py`
+- `api/schemas/__init__.py`
+- `configs/__init__.py`
+- `configs/models/local_models.json`
+- `configs/models/openrouter_models.json`
+- `configs/usage/openrouter_usage.json`
+- `core/__init__.py`
+- `core/config.py`
+- `core/models/__init__.py`
+- `core/models/model_manager.py`
+- `core/models/openrouter_client.py`
+- `core/models/usage_manager.py`
+- `core/ollama_client.py`
+- `core/prompts/__init__.py`
+- `core/prompts/system_prompts.py`
+- `core/router/__init__.py`
+- `core/router/router.py`
+- `core/tools/__init__.py`
+- `core/tools/file_tools.py`
+- `core/tools/memory_writer.py`
+- `core/tools/safe_shell.py`
+- `core/tools/tool_registry.py`
+- `docs/ARCHITECTURE.md`
+- `docs/ROADMAP.md`
+- `docs/__init__.py`
+- `logs/__init__.py`
+- `main.py`
+- `memory/__init__.py`
+- `memory/chroma/__init__.py`
+- `memory/chroma/chroma_manager.py`
+- `memory/context/INSTALLED_TOOLS.md`
+- `memory/context/LOCAL_MODELS.md`
+- `memory/context/PROJECT_CONTEXT.md`
+- `memory/context/SYSTEM_CONTEXT.md`
+- `memory/indexes/__init__.py`
+- `memory/load_memory.py`
+- `memory/markdown/__init__.py`
+- `requirements.txt`
+- `scripts/__init__.py`
+- `scripts/scan_environment.py`
+- `scripts/scan_environment.sh`
+- `scripts/test_openrouter.py`
+- `tests/__init__.py`
+- `tests/test_openrouter_safety.py`
+- `tests/test_safe_tools.py`
+- `workspace/__init__.py`
+- `workspace/projects/__init__.py`
+- `workspace/reports/__init__.py`
+- `workspace/reports/environment/20260511-224739-environment-snapshot.md`
+- `workspace/reports/environment/20260511-224741-project-context-snapshot.md`
+- `workspace/reports/environment/20260511-224851-environment-snapshot.md`
+- `workspace/research/__init__.py`
+- `workspace/tasks/__init__.py`

@@ -1,0 +1,96 @@
+# Local AI System
+
+Terminal-first local AI orchestration with persistent markdown memory and Ollama
+models as the default provider.
+
+# Model Providers
+
+## Local Ollama
+
+Default provider. Used for most tasks.
+
+Local roles are configured in `configs/models/local_models.json`:
+
+- `general` uses the local orchestrator model
+- `coding` uses the local coding model
+- `fast` uses the local fast model
+
+## OpenRouter Free Models
+
+Optional fallback provider.
+Only free models are allowed.
+Usage is tracked locally.
+Daily and per-minute limits are enforced locally before calls.
+Remote key usage is checked through OpenRouter when an API key is available.
+
+OpenRouter configuration lives in `configs/models/openrouter_models.json`.
+Usage is stored in `configs/usage/openrouter_usage.json`.
+
+The strict free-only guard allows only:
+
+- `openrouter/free`
+- model IDs ending in `:free`
+
+Free model discovery uses OpenRouter's models endpoint and stores a local cache
+of zero-price text chat models. Specific model routing can be configured per
+purpose, while `openrouter/free` remains the fallback.
+
+Set environment variables in `.env`:
+
+```bash
+OPENROUTER_API_KEY=
+OPENROUTER_SITE_URL=http://localhost
+OPENROUTER_APP_NAME=local-ai-system
+```
+
+Do not commit `.env`.
+
+## Usage
+
+```bash
+python main.py
+```
+
+Then choose:
+
+- `general` for local reasoning
+- `coding` for local coding
+- `fast` for a smaller local model
+- `review` for an OpenRouter free review when available, otherwise local fallback
+- `api` for a direct OpenRouter free-model request
+- `doctor` for a local-first system health report
+- `project_brief` to generate and save `memory/context/PROJECT_BRIEF.md`
+- `memory_audit` to inspect markdown memory and propose fixes
+- `model_status` to review local/API routing and OpenRouter budget status
+- `system_review` for local self-review plus optional OpenRouter free multi-review
+- `tool_ideas` to rank useful future AI_SYSTEM tools
+- `usage` to check OpenRouter usage
+- `discover` to refresh the free-model discovery cache
+- `exit` to quit
+
+Test OpenRouter with one optional API call:
+
+```bash
+python scripts/test_openrouter.py
+```
+
+If the API key is missing, the script prints a safe disabled message.
+If the API key exists and local free limits allow it, the script makes one tiny
+OpenRouter request and updates local usage.
+
+# Safe Local Tools
+
+Agents can inspect the local project through a narrow tool registry in
+`core/tools`. The tool layer blocks arbitrary shell execution, delete/move
+operations, `.env` reads, secret-looking paths, and writes outside markdown
+memory or environment reports.
+
+Run a terminal-only environment scan:
+
+```bash
+python scripts/scan_environment.py
+```
+
+This refreshes `memory/context/SYSTEM_CONTEXT.md`,
+`memory/context/INSTALLED_TOOLS.md`, `memory/context/PROJECT_CONTEXT.md`, and
+writes timestamped reports under `workspace/reports/environment/`.
