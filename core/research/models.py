@@ -2,11 +2,34 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
+from urllib.parse import urlparse
+
+
+DISALLOWED_SOURCE_HOSTS = {
+    "doubleclick.net",
+    "googleadservices.com",
+    "googlesyndication.com",
+}
 
 
 def is_valid_source_url(url: str) -> bool:
-    clean_url = (url or "").strip().lower()
-    return clean_url.startswith(("http://", "https://"))
+    clean_url = (url or "").strip()
+    parsed = urlparse(clean_url)
+    if parsed.scheme.lower() not in {"http", "https"}:
+        return False
+    if not parsed.netloc:
+        return False
+
+    host = parsed.netloc.lower()
+    if host.startswith("www."):
+        host = host[4:]
+    if any(host == blocked or host.endswith(f".{blocked}") for blocked in DISALLOWED_SOURCE_HOSTS):
+        return False
+    if host == "bing.com" and parsed.path.lower().startswith("/aclick"):
+        return False
+    if host == "duckduckgo.com" and parsed.path.lower() == "/y.js":
+        return False
+    return True
 
 
 def utc_now_iso() -> str:

@@ -105,6 +105,23 @@ class ResponseReportTests(unittest.TestCase):
         self.assertEqual(status, 2)
         run_research_context.assert_not_called()
 
+    def test_one_shot_project_context_export_runs_exporter(self):
+        with patch.object(cli, "run_project_context_export", return_value=0) as run_export:
+            status = cli.run_one_shot(["project_context_export"])
+
+        self.assertEqual(status, 0)
+        run_export.assert_called_once_with()
+
+    def test_one_shot_project_context_export_rejects_extra_args(self):
+        with (
+            patch.object(cli, "run_project_context_export") as run_export,
+            redirect_stdout(io.StringIO()),
+        ):
+            status = cli.run_one_shot(["project_context_export", "--max-depth", "2"])
+
+        self.assertEqual(status, 2)
+        run_export.assert_not_called()
+
 
 if __name__ == "__main__":
     unittest.main()

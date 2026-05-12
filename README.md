@@ -70,8 +70,10 @@ Then choose:
 - `system_review` for local self-review plus optional OpenRouter free multi-review
 - `tool_ideas` to rank useful future AI_SYSTEM tools
 - `research` to collect fresh source metadata into `workspace/research/`
+- `research-context` to convert a saved research report into compact context
 - `usage` to check OpenRouter usage
 - `discover` to refresh the free-model discovery cache
+- `project_context_export` to refresh generated ChatGPT project context
 - `exit` to quit
 
 Run a one-shot fresh research report:
@@ -134,6 +136,12 @@ This refreshes `memory/context/SYSTEM_CONTEXT.md`,
 writes timestamped reports under `workspace/reports/environment/`.
 
 Create or refresh ChatGPT Desktop project-context material:
+
+```bash
+python main.py project_context_export
+```
+
+Equivalent direct script form:
 
 ```bash
 python scripts/export_project_context.py

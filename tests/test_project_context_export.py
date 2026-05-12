@@ -69,6 +69,8 @@ class ProjectContextExportTests(unittest.TestCase):
 
             self.assertIn("# AI_SYSTEM Generated Project Context", summary)
             self.assertIn('"enabled": true', summary)
+            self.assertIn("Real research gateway", summary)
+            self.assertIn("project_context_export", summary)
             self.assertNotIn("or-secret-value", summary)
 
 

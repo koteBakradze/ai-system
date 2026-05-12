@@ -1,28 +1,60 @@
 # Fresh Research Gateway Usage
 
-Generate a research report from the terminal:
+The research gateway has two explicit modes:
+
+- mock/offline mode for deterministic local checks;
+- real DDGS-backed mode for current internet source metadata.
+
+## Mock/Offline Research
+
+Use mock/offline mode when testing or when no network should be used:
 
 ```bash
-python main.py research "best local LLM coding workflow 2026"
+python main.py research "test topic" --provider mock
 ```
 
-Another example:
+Mock reports are labeled with provider `mock-offline`. They must never be presented as real internet research.
+
+## Real Research
+
+Use `--real` for DDGS-backed source collection:
 
 ```bash
-python main.py research "OpenRouter free model limits and best practices"
+python main.py research "best local LLM coding workflow 2026" --real
 ```
 
-Reports are saved as markdown files under:
+Equivalent explicit provider form:
+
+```bash
+python main.py research "best local LLM coding workflow 2026" --provider ddgs
+```
+
+If the optional provider is missing, install it:
+
+```bash
+pip install ddgs
+```
+
+Explicit real research does not silently fall back to mock sources. If real search fails or returns no results, the saved report should show the actual provider and limitations.
+
+## Outputs
+
+Reports are saved under:
 
 ```text
 workspace/research/
 ```
 
-When the optional `ddgs` package is available, the gateway uses it for free
-DuckDuckGo-style search. Without that package, the command still creates a safe
-offline report with no source candidates, which keeps tests and local workflows
-API-key-free.
+Each report keeps raw source titles, URLs, snippets, provider names, search queries, timestamps, source counts, limitations, and safety notes separate from final conclusions.
 
-The report keeps raw source titles, URLs, snippets, provider names, and search
-queries separate from final conclusions so local models can use the material as
-fresh context later.
+Convert a saved report into compact reusable context:
+
+```bash
+python main.py research-context workspace/research/<generated-report>.md
+```
+
+Context packs are saved under:
+
+```text
+memory/context/research/
+```

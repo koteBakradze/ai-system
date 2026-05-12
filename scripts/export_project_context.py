@@ -123,6 +123,10 @@ IMPORTANT_FILES = {
     "core/tools/safe_shell.py": "Whitelisted read-only local command runner for environment checks.",
     "core/tools/tool_registry.py": "Narrow tool registry exposed to agents.",
     "core/tools/memory_writer.py": "Restricted markdown memory/report writer.",
+    "core/research/gateway.py": "Collects, validates, deduplicates, and summarizes research source metadata.",
+    "core/research/providers.py": "Provides explicit mock/offline and DDGS-backed real search providers.",
+    "core/research/writer.py": "Renders and saves markdown research reports.",
+    "core/research/context_builder.py": "Builds compact reusable research context packs from saved reports.",
     "agents/environment/environment_agent.py": "Builds local environment, project, doctor, and model-status contexts.",
     "agents/research/research_agent.py": "Builds and saves project brief context.",
     "agents/planning/planner_agent.py": "Builds system-review and tool-ideas contexts.",
@@ -138,6 +142,9 @@ IMPORTANT_FILES = {
     "tests/test_openrouter_safety.py": "Covers free-only OpenRouter validation and budget guards.",
     "tests/test_system_tools_pack.py": "Covers system-tool orchestration paths.",
     "tests/test_main_response_reports.py": "Covers markdown response report saving.",
+    "tests/test_fresh_research_gateway.py": "Covers research providers, source validation, fallback behavior, and report writing.",
+    "tests/test_research_context_builder.py": "Covers compact research context extraction and saving.",
+    "tests/test_project_context_export.py": "Covers generated project-context export behavior.",
 }
 
 
@@ -257,6 +264,7 @@ def build_project_summary(
         "- The CLI in `main.py` asks for a task type and prompt, routes through `core/router/router.py`, and saves full responses under `workspace/reports/responses/`.",
         "- Markdown memory in `memory/context` is loaded into model prompts for normal local/API tasks.",
         "- System-tool tasks build deterministic local context for doctor, project brief, memory audit, model status, system review, and tool ideas.",
+        "- Research tasks collect explicit mock or real source metadata and save markdown reports under `workspace/research/`.",
         "- Local model roles come from `configs/models/local_models.json`; OpenRouter behavior comes from `configs/models/openrouter_models.json`.",
         "- Safe local tools can list/read selected project files, run whitelisted environment checks, and write only approved markdown memory/report files.",
         "",
@@ -278,7 +286,9 @@ def build_project_summary(
         "- Local fallback for review workflows when OpenRouter is unavailable or unsafe to call.",
         "- Doctor, project brief, memory audit, model status, system review, and tool-ideas workflows.",
         "- Safe file, shell, memory writer, and tool registry layers.",
+        "- Real research gateway with explicit mock/offline mode, DDGS-backed real mode, saved source metadata, and compact context packs.",
         "- Environment and project context snapshot script.",
+        "- CLI project-context export task.",
         "- Markdown response report saving to avoid dumping long model responses into the terminal.",
         f"- Unit tests present: {len(tests)} test files.",
         "",
@@ -329,6 +339,7 @@ def build_project_summary(
         "- File reads are limited to safe project paths and selected text-like suffixes, with JSON/key redaction.",
         "- Memory/report writes should stay inside approved markdown paths.",
         "- Large generated outputs should be saved as markdown reports instead of printed directly.",
+        "- Mock/offline research must remain clearly labeled and must never be presented as real internet research.",
         "",
         "## 9. Current Problems / Missing Parts",
         "",
@@ -336,11 +347,11 @@ def build_project_summary(
         "",
         "## 10. Recommended Next Steps",
         "",
-        "- Copy useful generated sections into `docs/context/CHATGPT_PROJECT_CONTEXT.md` and keep that file human-curated.",
-        "- Expand `docs/ARCHITECTURE.md` and `docs/ROADMAP.md` if they are meant to be source-of-truth docs.",
+        "- Run unit tests after changing code or workflow docs.",
+        "- Run mock and real research smoke checks when network access is available.",
+        "- Keep `docs/context/CHATGPT_PROJECT_CONTEXT.md` human-curated and refresh this generated summary with `python main.py project_context_export`.",
+        "- Start Phase 3 income research workflow design using saved research reports/context packs as inputs.",
         "- Add a context freshness check that compares generated summary timestamps against major source file modification times.",
-        "- Consider exposing this exporter through the CLI as a `project_context_export` task.",
-        "- Add tests for generated context structure if this becomes a core workflow.",
         "",
         "## 11. How ChatGPT Should Help in This Project",
         "",
@@ -435,7 +446,7 @@ def summarize_python_file(path: Path) -> str:
 
 def extract_cli_tasks(path: Path) -> list[str]:
     text = safe_read_text(path)
-    task_names = set(re.findall(r'"([a-z_]+)"', text))
+    task_names = set(re.findall(r'"([a-z_-]+)"', text))
     known = {
         "api",
         "coding",
@@ -446,7 +457,10 @@ def extract_cli_tasks(path: Path) -> list[str]:
         "general",
         "memory_audit",
         "model_status",
+        "project_context_export",
         "project_brief",
+        "research",
+        "research-context",
         "review",
         "system_review",
         "tool_ideas",
@@ -585,8 +599,9 @@ def current_problem_lines(
 
     problems.extend(
         [
-            "- The manual ChatGPT project context file is intentionally TODO-based until curated.",
-            "- The CLI does not yet expose a project-context export task; run the script directly for now.",
+            "- Phase 1 needs periodic live DDGS smoke checks when network access is available.",
+            "- The income research workflow is not yet implemented.",
+            "- Browser automation and GitHub publishing remain postponed and approval-based.",
             "- Local model quality depends on installed Ollama models matching the local model config.",
             "- OpenRouter is optional and should remain disabled or skipped when keys, budget, or free-model validation are not safe.",
         ]

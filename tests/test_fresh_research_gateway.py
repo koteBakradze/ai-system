@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from unittest.mock import patch
 
 from core.research.gateway import create_research_report
-from core.research.models import SearchResult
+from core.research.models import SearchResult, is_valid_source_url
 from core.research.providers import (
     DDGS_INSTALL_MESSAGE,
     DDGSSearchProvider,
@@ -196,6 +196,14 @@ class FreshResearchGatewayTests(unittest.TestCase):
 
         self.assertEqual(report.source_count, 0)
         self.assertTrue(any("Skipped invalid search result" in item for item in report.limitations))
+
+    def test_search_ad_redirect_urls_are_rejected(self):
+        self.assertFalse(
+            is_valid_source_url("https://www.bing.com/aclick?ld=tracking-token")
+        )
+        self.assertFalse(is_valid_source_url("https://googleadservices.com/pagead/aclk"))
+        self.assertFalse(is_valid_source_url("https://duckduckgo.com/y.js?ad_domain=example.com"))
+        self.assertTrue(is_valid_source_url("https://example.com/source-page"))
 
     def test_empty_real_results_do_not_create_fake_sources(self):
         report = create_research_report(

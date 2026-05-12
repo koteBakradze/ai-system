@@ -8,10 +8,11 @@ from core.research.context_builder import build_context_pack, save_context_pack
 from core.research.gateway import create_research_report
 from core.research.writer import save_research_report
 from core.router.router import SYSTEM_TOOL_TASKS, orchestrator
+from scripts import export_project_context
 
 
 MODEL_TASKS = {"coding", "fast", "general", "review", "api"}
-UTILITY_TASKS = {"usage", "discover"}
+UTILITY_TASKS = {"usage", "discover", "project_context_export"}
 RESEARCH_TASKS = {"research", "research-context"}
 ALL_TASKS = MODEL_TASKS | SYSTEM_TOOL_TASKS | UTILITY_TASKS | RESEARCH_TASKS | {"exit"}
 PROJECT_ROOT = Path(__file__).resolve().parent
@@ -121,8 +122,18 @@ def run_research_context(report_path_text: str) -> Path:
     return context_path
 
 
+def run_project_context_export() -> int:
+    return export_project_context.main(["--skip-manual-template"])
+
+
 def run_one_shot(argv: list[str]) -> int:
     command = argv[0].strip().lower() if argv else ""
+    if command == "project_context_export":
+        if len(argv) > 1:
+            print("Usage: python main.py project_context_export")
+            return 2
+        return run_project_context_export()
+
     if command == "research":
         try:
             topic, provider_name = _parse_research_args(argv[1:])
@@ -150,7 +161,8 @@ def run_one_shot(argv: list[str]) -> int:
 
     print(
         'Usage: python main.py research "topic here" [--provider mock|ddgs] [--real]\n'
-        "   or: python main.py research-context workspace/research/<report>.md"
+        "   or: python main.py research-context workspace/research/<report>.md\n"
+        "   or: python main.py project_context_export"
     )
     return 2
 
@@ -168,7 +180,7 @@ def main(argv: list[str] | None = None):
             "\nTask Type "
             "(coding/fast/general/review/api/doctor/project_brief/"
             "memory_audit/model_status/system_review/tool_ideas/"
-            "research/research-context/usage/discover/exit): "
+            "research/research-context/project_context_export/usage/discover/exit): "
         ).strip().lower()
 
         if task_type == "exit":
@@ -184,12 +196,17 @@ def main(argv: list[str] | None = None):
             print(json.dumps(orchestrator.discover_openrouter_models(), indent=2))
             continue
 
+        if task_type == "project_context_export":
+            print("\n=== PROJECT CONTEXT EXPORT ===\n")
+            run_project_context_export()
+            continue
+
         if task_type not in ALL_TASKS:
             print(
                 "Unknown task type. Choose coding, fast, general, review, "
                 "api, doctor, project_brief, memory_audit, model_status, "
-                "system_review, tool_ideas, research, research-context, usage, "
-                "discover, or exit."
+                "system_review, tool_ideas, research, research-context, "
+                "project_context_export, usage, discover, or exit."
             )
             continue
 
