@@ -69,9 +69,42 @@ Then choose:
 - `model_status` to review local/API routing and OpenRouter budget status
 - `system_review` for local self-review plus optional OpenRouter free multi-review
 - `tool_ideas` to rank useful future AI_SYSTEM tools
+- `research` to collect fresh source metadata into `workspace/research/`
 - `usage` to check OpenRouter usage
 - `discover` to refresh the free-model discovery cache
 - `exit` to quit
+
+Run a one-shot fresh research report:
+
+```bash
+python main.py research "best local LLM coding workflow 2026" --real
+```
+
+Real research uses the optional free DDGS provider:
+
+```bash
+pip install ddgs
+python main.py research "best local LLM coding workflow 2026" --provider ddgs
+```
+
+Offline/mock research is available explicitly for deterministic tests:
+
+```bash
+python main.py research "test topic" --provider mock
+```
+
+The gateway saves titles, URLs, snippets, search queries, and provider metadata
+without browser automation or autonomous actions. Explicit real research never
+falls back to mock sources.
+
+Convert a saved research report into compact reusable AI context:
+
+```bash
+python main.py research-context workspace/research/<generated-report>.md
+```
+
+Raw reports stay under `workspace/research/`. Compact context packs are saved
+under `memory/context/research/` for later local-model prompts.
 
 Test OpenRouter with one optional API call:
 
