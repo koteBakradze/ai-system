@@ -1,16 +1,57 @@
 {
-  "date": "2026-05-11",
-  "requests_today": 0,
-  "request_timestamps": [],
+  "date": "2026-05-12",
+  "requests_today": 3,
+  "request_timestamps": [
+    1778544556.8542862,
+    1778544556.9739652,
+    1778544557.127726
+  ],
   "successful_requests_today": 0,
-  "failed_requests_today": 0,
-  "total_prompt_tokens": 0,
-  "total_completion_tokens": 0,
-  "total_tokens": 0,
+  "failed_requests_today": 3,
+  "total_prompt_tokens": 17962,
+  "total_completion_tokens": 2700,
+  "total_tokens": 20662,
   "estimated_cost": 0.0,
   "last_response_usage": null,
-  "last_request": null,
-  "model_counts": {},
-  "purpose_counts": {},
-  "remote_key_status": null
+  "last_request": {
+    "timestamp": "2026-05-12T00:09:17.127727+00:00",
+    "model_requested": "deepseek/deepseek-r1-distill-llama-70b:free",
+    "model_used": null,
+    "purpose": "review_code_reviewer",
+    "success": false,
+    "error": "OpenRouter request failed with HTTP 404. Details: No endpoints found for deepseek/deepseek-r1-distill-llama-70b:free."
+  },
+  "model_counts": {
+    "nvidia/nemotron-nano-9b-v2:free": 1,
+    "arcee-ai/trinity-large-thinking:free": 2,
+    "deepseek/deepseek-r1:free": 2,
+    "deepseek/deepseek-r1-distill-llama-70b:free": 2
+  },
+  "purpose_counts": {
+    "review_technical_architect": 1,
+    "review_skeptical_engineer": 1,
+    "review_code_reviewer": 1
+  },
+  "remote_key_status": {
+    "available": true,
+    "checked_at": "2026-05-12T00:09:10.579044+00:00",
+    "status_code": 200,
+    "data": {
+      "label": "sk-or-v1-e80...e29",
+      "limit": null,
+      "limit_reset": null,
+      "limit_remaining": null,
+      "include_byok_in_limit": false,
+      "usage": 0,
+      "usage_daily": 0,
+      "usage_weekly": 0,
+      "usage_monthly": 0,
+      "byok_usage": 0,
+      "byok_usage_daily": 0,
+      "byok_usage_weekly": 0,
+      "byok_usage_monthly": 0,
+      "is_free_tier": true
+    },
+    "error": null
+  }
 }

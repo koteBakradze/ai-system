@@ -51,6 +51,11 @@ Do not commit `.env`.
 python main.py
 ```
 
+AI task responses are saved as Markdown files under
+`workspace/reports/responses/`. The terminal prints the saved file path instead
+of the full response, which keeps large reports such as `system_review`
+readable.
+
 Then choose:
 
 - `general` for local reasoning
@@ -94,3 +99,13 @@ python scripts/scan_environment.py
 This refreshes `memory/context/SYSTEM_CONTEXT.md`,
 `memory/context/INSTALLED_TOOLS.md`, `memory/context/PROJECT_CONTEXT.md`, and
 writes timestamped reports under `workspace/reports/environment/`.
+
+Create or refresh ChatGPT Desktop project-context material:
+
+```bash
+python scripts/export_project_context.py
+```
+
+This creates `docs/context/CHATGPT_PROJECT_CONTEXT.md` only if it is missing,
+then updates `docs/context/AI_SYSTEM_PROJECT_SUMMARY.generated.md` with a local
+project summary. It does not call model APIs.

@@ -1,4 +1,7 @@
 import json
+import re
+from datetime import datetime
+from pathlib import Path
 
 from core.router.router import SYSTEM_TOOL_TASKS, orchestrator
 
@@ -6,6 +9,34 @@ from core.router.router import SYSTEM_TOOL_TASKS, orchestrator
 MODEL_TASKS = {"coding", "fast", "general", "review", "api"}
 UTILITY_TASKS = {"usage", "discover"}
 ALL_TASKS = MODEL_TASKS | SYSTEM_TOOL_TASKS | UTILITY_TASKS | {"exit"}
+PROJECT_ROOT = Path(__file__).resolve().parent
+RESPONSE_REPORT_DIR = PROJECT_ROOT / "workspace" / "reports" / "responses"
+
+
+def _slugify(value: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", value.lower()).strip("-")
+    return slug or "response"
+
+
+def save_response_report(task_type: str, prompt: str, response: str) -> Path:
+    RESPONSE_REPORT_DIR.mkdir(parents=True, exist_ok=True)
+    generated_at = datetime.now()
+    timestamp = generated_at.strftime("%Y%m%d-%H%M%S-%f")
+    slug = _slugify(task_type)
+    path = RESPONSE_REPORT_DIR / f"{timestamp}-{slug}.md"
+
+    prompt_text = prompt.strip() or "No prompt provided."
+    content = (
+        f"# AI Response: {task_type}\n\n"
+        f"- Generated: {generated_at.isoformat(timespec='seconds')}\n"
+        f"- Task type: `{task_type}`\n\n"
+        "## Prompt\n\n"
+        f"{prompt_text}\n\n"
+        "## Response\n\n"
+        f"{response.rstrip()}\n"
+    )
+    path.write_text(content, encoding="utf-8")
+    return path
 
 
 def main():
@@ -55,8 +86,10 @@ def main():
             prompt=prompt
         )
 
-        print("\n=== RESPONSE ===\n")
-        print(response)
+        report_path = save_response_report(task_type, prompt, response)
+        relative_path = report_path.relative_to(PROJECT_ROOT).as_posix()
+        print("\n=== RESPONSE SAVED ===\n")
+        print(f"Saved full Markdown response to `{relative_path}`.")
 
 
 if __name__ == "__main__":

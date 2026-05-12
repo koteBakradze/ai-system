@@ -11,7 +11,6 @@
   "remote_key_timeout_seconds": 15,
   "max_completion_tokens": 900,
   "temperature": 0.2,
-
   "limits": {
     "free_tier_daily_request_limit": 50,
     "paid_account_free_model_daily_request_limit": 1000,
@@ -19,13 +18,11 @@
     "reserve_requests": 5,
     "max_parallel_review_models": 3
   },
-
   "default": "openrouter/free",
   "default_model": "openrouter/free",
   "fallback_models": [
     "openrouter/free"
   ],
-
   "seed_models": {
     "general": "openrouter/free",
     "reasoning": "arcee-ai/trinity-large-thinking:free",
@@ -33,7 +30,6 @@
     "balanced_review": "deepseek/deepseek-r1-distill-qwen-32b:free",
     "code_review": "deepseek/deepseek-r1-distill-llama-70b:free"
   },
-
   "multi_review_profiles": {
     "technical_architect": {
       "model": "arcee-ai/trinity-large-thinking:free",
@@ -61,7 +57,77 @@
       "system_prompt": "You are a general second-opinion reviewer. Give a concise, practical answer and mention uncertainty."
     }
   },
-
-  "discovered_at": null,
-  "discovered_free_models": []
+  "discovered_at": "2026-05-11T23:52:15.232747+00:00",
+  "discovered_free_models": [],
+  "max_review_models": 3,
+  "purpose_models": {
+    "api": [
+      "openrouter/free"
+    ],
+    "review": [
+      "deepseek/deepseek-r1-distill-qwen-32b:free",
+      "openrouter/free"
+    ],
+    "review_correctness": [
+      "deepseek/deepseek-r1-distill-qwen-32b:free",
+      "auto:review_correctness",
+      "openrouter/free"
+    ],
+    "review_security": [
+      "deepseek/deepseek-r1-distill-llama-70b:free",
+      "auto:review_security",
+      "openrouter/free"
+    ],
+    "review_maintainability": [
+      "deepseek/deepseek-r1:free",
+      "auto:review_maintainability",
+      "openrouter/free"
+    ],
+    "reasoning": [
+      "arcee-ai/trinity-large-thinking:free",
+      "auto:reasoning",
+      "openrouter/free"
+    ],
+    "fast": [
+      "auto:fast",
+      "openrouter/free"
+    ],
+    "coding": [
+      "deepseek/deepseek-r1-distill-llama-70b:free",
+      "auto:coding",
+      "openrouter/free"
+    ]
+  },
+  "review_perspectives": [
+    {
+      "name": "technical_architect",
+      "purpose": "review_technical_architect",
+      "model": "arcee-ai/trinity-large-thinking:free",
+      "system_prompt": "You are a senior software architect. Review the idea for architecture quality, maintainability, risks, and missing technical decisions. Be practical and concise."
+    },
+    {
+      "name": "skeptical_engineer",
+      "purpose": "review_skeptical_engineer",
+      "model": "deepseek/deepseek-r1:free",
+      "system_prompt": "You are a skeptical senior engineer. Find weak assumptions, hidden complexity, fake optimism, and implementation risks. Be direct and useful."
+    },
+    {
+      "name": "code_reviewer",
+      "purpose": "review_code_reviewer",
+      "model": "deepseek/deepseek-r1-distill-llama-70b:free",
+      "system_prompt": "You are a strict code reviewer. Focus on bugs, edge cases, security, maintainability, and testability. Return actionable feedback."
+    },
+    {
+      "name": "product_income_reviewer",
+      "purpose": "review_product_income_reviewer",
+      "model": "deepseek/deepseek-r1-distill-qwen-32b:free",
+      "system_prompt": "You are a pragmatic product and monetization reviewer. Judge whether this can realistically make money, what is fake, what is risky, and what the smallest useful version should be."
+    },
+    {
+      "name": "free_router_general",
+      "purpose": "review_free_router_general",
+      "model": "openrouter/free",
+      "system_prompt": "You are a general second-opinion reviewer. Give a concise, practical answer and mention uncertainty."
+    }
+  ]
 }
